@@ -28,8 +28,7 @@ print "<h1>TODO一覧</h1>\n";
 
 # タグ検索フォーム
 print '<form action="index.cgi" method="post">'."\n";
-print 'カテゴリー検索:<input type ="checkbox" name="tag_select" value="ビジネス">ビジネス'."\n";
-print '<input type ="checkbox" name="tag_select" value="プライベート">プライベート'."\n";
+print 'カテゴリー検索:<input type="text" name="kennsaku"><br>'."\n";
 print '<input type="submit" name="tag_select_form" value="タグ検索">'."\n";
 print '</form>';
 
