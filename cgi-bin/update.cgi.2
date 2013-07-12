@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Data::Dumper;
+use Task;
+
+
+
+#送信されたデータを受け取る
+my $method = $ENV{'REQUEST_METHOD'};
+$method = $method || "POST";
+ print "method = $method\n";
+
+if ($method eq 'POST') {
+  read(STDIN, my $alldata, $ENV{'CONTENT_LENGTH'});
+  warn $alldata;
+  
+#  my $task = new Task("$alldata");
+ # my $result = $task->update();
+
+  print "Status: 302 Moved\n";
+  print "Location: index.cgi\n\n";
+
+  print "Content-type: text/html\n\n";
+
+
+} else {
+   my $alldata = $ENV{'QUERY_STRING'} || "";
+}

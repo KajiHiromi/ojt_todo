@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>todoアプリ</title>
+</head>
+
+<body>
+<center>
+<h1>Task　登録</h1>
+
+
+        <form action="cgi-bin/create.cgi" method="GET">
+                Task: <input type="text" name="task"><br>
+                Tag:<input type ="checkbox" name="tag" value="t1">プライベート
+                    <input type ="checkbox" param name="tag" value="t2">ビジネス
+                Limit_time:<input type="datetime" param name= "limit_time">   
+                Memo: <textarea rows="7" cols="50" param name="memo">メモ</textarea>
+<!--       <select name="command">
+           <><>
+        </select>
+-->
+                 <input type="submit" name="Submit" value="登録">
+        </form>
+
+
+
+</center>
+</body>
+</html>
+
