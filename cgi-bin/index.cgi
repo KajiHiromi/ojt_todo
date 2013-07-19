@@ -28,8 +28,10 @@ print "<h1>TODO一覧</h1>\n";
 
 # タグ検索フォーム
 print '<form action="index.cgi" method="post">'."\n";
-print 'カテゴリー検索:<input type="text" name="kennsaku"><br>'."\n";
-print '<input type="submit" name="tag_select_form" value="タグ検索">'."\n";
+print 'カテゴリー検索:<input type="text" name="kensaku"><br>'."\n";
+
+# print '<input type="submit" name="tag_select_form" value="タグ検索">'."\n";
+print '<input type="submit">'."\n";
 print '</form>';
 
 
@@ -40,7 +42,7 @@ print "method = $method\n";
 
 if ($method eq 'GET') {
     my $body = $ENV{'QUERY_STRING'};
-  }
+ }
   elsif ($method eq 'POST') {
     read(STDIN, my $body, $ENV{'CONTENT_LENGTH'});
 
@@ -48,12 +50,47 @@ if ($method eq 'GET') {
     $body=~ s/%([a-fA-F0-9][a-fA-F0-9])/pack('C', hex($1) )/ge;
     print "これ$body\n";
     my %body = map{ split(/\=/, $_); } split(/&/, $body);
+      
+    #print $body;
 
 
+ my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
+  my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
+ 
+ 
+  $tagQuery->execute($body->{kensaku});
+ 
+ 
+  #for (my $i=0; $i < $tasks_num; $i++) {
+    my $tag = $tagQuery->fetchrow_hashref;
+    print $tag->{id}."\n";
+ 
+    my $tasktagsQuery = $db->prepare("SELECT * FROM tasktag WHERE tag_id=?");
+     $tasktagsQuery->execute($tag->{id});
+     #print $task->{id};
+     my $tasktags_num = $tasktagsQuery->rows;
+ 
+       for (my $i=0; $i < $tasktags_num; $i++){
+         my $tasktag = $tasktagsQuery->fetchrow_hashref;
+ 
+          print Dumper $tasktag;
+ 
+         my $taskQuery = $db->prepare("SELECT * FROM task WHERE id=? AND status=?");
+         $taskQuery->execute($tasktag->{task_id},"未完了");
+ 
+         my $tasks_num = $taskQuery->rows;
+ 
+          for (my $i=0; $i < $tasks_num; $i++){
+         my $task = $taskQuery->fetchrow_hashref;
+            # print Dumper $tag;
+ 
+          }
+ 
 }
 
-#print $body;
-my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
+
+
+$db = DBI->connect('DBI:mysql:todo',$user,$passwd);
 my $tasksQuery = $db->prepare("SELECT * FROM task WHERE user_id = ? AND status = ?;");
     
 $tasksQuery->execute(1,"未完了");
@@ -105,3 +142,4 @@ print "</html>\n";
 
 $tasksQuery->finish;
 $db->disconnect;
+}

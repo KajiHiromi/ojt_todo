@@ -9,41 +9,47 @@ my $user = 'todouser';
 my $passwd = 'kaji';
 
 my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
-my $tasksQuery = $db->prepare("SELECT * FROM task WHERE user_id = ? AND status = ?;");
-    
-$tasksQuery->execute(1,"未完了");
+my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
+   
+my $body= "kensaku=ビジネス";
 
-my $tasks_num = $tasksQuery->rows;
+my $task = split(/&/, $body);
+print "$task\n";
 
+   my ($key, $value) = split(/=/,$task);
+  print "キー$key => $value\n";
 
-for (my $i=0; $i < $tasks_num; $i++) {
-  my $task = $tasksQuery->fetchrow_hashref;
-# print $task->{id}."\n";
-   my $tasktagsQuery = $db->prepare("SELECT * FROM tasktag WHERE task_id=?");
-   $tasktagsQuery->execute($task->{id});
+ my $task2{$key} = $value;
+ print "これが\%task2\n";
+
+ 
+$tagQuery->execute($body->{kensaku});
+print "けんさくは\%task2->{kensaku}\n";
+
+#for (my $i=0; $i < $tasks_num; $i++) {
+  my $tag = $tagQuery->fetchrow_hashref;
+  print $tag->{id}."\n";
+ 
+  my $tasktagsQuery = $db->prepare("SELECT * FROM tasktag WHERE tag_id=?");
+   $tasktagsQuery->execute($tag->{id});
    #print $task->{id};
    my $tasktags_num = $tasktagsQuery->rows;
     
-     print "<div>\n";
-     print "☆TODO：$task->{name}\n\n<br>";
-     print "期限： $task->{limit_time}\n\n<br>";
-     print "メモ：$task->{memo}\n\n<br>";
-
-
      for (my $i=0; $i < $tasktags_num; $i++){
        my $tasktag = $tasktagsQuery->fetchrow_hashref;
-       # print Dumper $tasktag;
-       my $tagsQuery = $db->prepare("SELECT * FROM tag WHERE id=?");
-       $tagsQuery->execute($tasktag->{tag_id});
 
-       my $tags_num = $tagsQuery->rows;
+        print Dumper $tasktag;
 
-        for (my $i=0; $i < $tags_num; $i++){
-          my $tag = $tagsQuery->fetchrow_hashref;
+       my $taskQuery = $db->prepare("SELECT * FROM task WHERE id=? AND status=?");
+       $taskQuery->execute($tasktag->{task_id},"未完了");
+
+       my $tasks_num = $taskQuery->rows;
+
+        for (my $i=0; $i < $tasks_num; $i++){
+       my $task = $taskQuery->fetchrow_hashref;
           # print Dumper $tag;
  
-          print "カテゴリー：$tag->{tag}\n\n";
         }
-      
+   
      }
-}
+#}
