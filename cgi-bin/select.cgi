@@ -11,8 +11,13 @@ my $passwd = 'kaji';
 #
 sub paresBody {
     my ($body) = @_;
+    
     my %body = map{ split(/\=/, $_); } split(/&/, $body);
+
+    
     return %body;
+
+
 }
 
 print "Content-Type: text/html\n\n";
@@ -33,36 +38,53 @@ if ($method eq 'POST') {
     $alldata =~tr/+//;
     $alldata =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack('C', hex($1) )/ge;
 
-    print "オールデータは$alldata\n";
-    my %vals = &paresBody($alldata);
+    #print "オールデータは$alldata\n";
+   
     
-    print %vals;
-    my $dbtag = \%vals;
+    my %vals = &paresBody($alldata); 
+        
+    #print %vals;
+    print "カテゴリー検索　→　[$vals{'tag'}]\n\n";
 
-     
-    print "データhashタグは$dbtag\n";
-    #print "データ%タグは,dbtag\n";
+    #print '<a href="http://192.168.75.128/cgi-bin/todo/create.cgi">TODO登録ページへ</a>'
+    #print '<a href="http://192.168.75.128/cgi-bin/todo/index.cgi">タスク一覧ページへ</a>'    
 
-
+   
+    
  
-#  my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
+    my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
   
-  #  my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
+    my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
+
+   
+     $tagQuery->execute($vals{'tag'});
+
+     my $tag = $tagQuery->fetchrow_hashref;
+ 
+
+     my $tasktagsQuery = $db->prepare("SELECT * FROM tasktag WHERE tag_id=?");
+     $tasktagsQuery->execute($tag->{id}) || die $tasktagsQuery->errstr;
+     my $tasktags_num = $tasktagsQuery->rows;
+
+    for (my $i=0; $i < $tasktags_num; $i++){
+         my $tasktag = $tasktagsQuery->fetchrow_hashref;
+
+   # print "タスク$tasktag->{task_id}";
+    #print Dumper $tasktag;
+
+    my $taskQuery = $db->prepare("SELECT * FROM task WHERE id=? AND status=?");
+    $taskQuery->execute($tasktag->{task_id},"未完了") || die $taskQuery->errstr;
+
+    my $task2 = $taskQuery->fetchrow_hashref;
+
+     print "<div>\n";
+     print "TODO：$task2->{name}\n\n<br>";
+     print "期限： $task2->{limit_time}\n\n<br>";
+     print "メモ：$task2->{memo}\n\n<br><br><br>";
+     print "</div\n>";
 
 
-  #  $tagQuery->execute($dbtag->{tag});
-
-  #  my $tag = $tagQuery->fetchrow_hashref;
-
-  #  my $tasktagsQuery = $db->prepare("SELECT * FROM tasktag WHERE tag_id=?");
-  #  $tasktagsQuery->execute($tag->{id}) || die $tasktagsQuery->errstr;
-  #  my $tasktags_num = $tasktagsQuery->rows;
-
-  #  for (my $i=0; $i < $tasktags_num; $i++){
-  #      my $tasktag = $tasktagsQuery->fetchrow_hashref;
-
-
-    #}  
+    }  
                        
 
 } else {
