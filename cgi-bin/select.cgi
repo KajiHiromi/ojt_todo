@@ -31,37 +31,26 @@ if ($method eq 'POST') {
 
     my %vals = &paresBody($alldata);
     my $dbtag = \%vals;
-#    warn Dumper $dbtag;
  
- #   print $dbtag;
 
-    my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
-    my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
-
-
-    $tagQuery->execute($dbtag->{tag});
-
-    my $tag = $tagQuery->fetchrow_hashref;
-  #  print $tag->{id}."\n";
-
-    my $tasktagsQuery = $db->prepare("SELECT * FROM tasktag WHERE tag_id=?");
-    $tasktagsQuery->execute($tag->{id}) || die $tasktagsQuery->errstr;
-    my $tasktags_num = $tasktagsQuery->rows;
-
-    for (my $i=0; $i < $tasktags_num; $i++){
-        my $tasktag = $tasktagsQuery->fetchrow_hashref;
-    #    print $tasktag->{task_id};
-   #     print Dumper $tasktag;
+  #  my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
+  #  my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
 
 
-#my $tag2 = Task::findById($tasktag->{task_id});
+  #  $tagQuery->execute($dbtag->{tag});
+
+  #  my $tag = $tagQuery->fetchrow_hashref;
+
+  #  my $tasktagsQuery = $db->prepare("SELECT * FROM tasktag WHERE tag_id=?");
+  #  $tasktagsQuery->execute($tag->{id}) || die $tasktagsQuery->errstr;
+  #  my $tasktags_num = $tasktagsQuery->rows;
+
+  #  for (my $i=0; $i < $tasktags_num; $i++){
+  #      my $tasktag = $tasktagsQuery->fetchrow_hashref;
+
+
     }  
-                               #warn Dumper $task;
-     #$task->updateStatus($dbtask->{status});
                                    
-          #                           print "Status: 302 Moved\n";
-           #                            print "Location: index.cgi\n\n";
-
 print "Content-type: text/html\n\n";
 
 } else {
