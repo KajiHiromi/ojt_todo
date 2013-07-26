@@ -26,14 +26,15 @@ print "<body>\n";
 
 print "<h1>TODO一覧</h1>\n";
 
+
 # タグ検索フォーム
-print '<form action="select.cgi" method="post">'."\n";
-print 'カテゴリー検索:<input type="text" name="tag"><br>'."\n";
+    print '<form action="select.cgi" method="post">'."\n";
+    print 'カテゴリー検索:<input type="text" name="tag"><br>'."\n";
 
 # print '<input type="submit" name="tag_select_form" value="タグ検索">'."\n";
-print '<input type="submit">'."\n";
-print '</form>';
-
+    print '<input type="submit">'."\n";
+    print '</form>';
+#}
 
 
 

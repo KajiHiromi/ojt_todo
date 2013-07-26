@@ -7,11 +7,11 @@ use Task;
 
 
 sub checkUser {
-  # cookieをチェックして、データベースを引いて、セッションIDと照らし合わせて、ユーザを特定して、そのユーザを返す
-  return {
-    user_id => 1,
-    name => "kaji",
-  }
+ # cookieをチェックして、データベースを引いて、セッションIDと照らし合わせて、ユーザを特定して、そのユーザを返す
+ return {
+   user_id => 1,
+   name => "kaji",
+ }
 }  
 my $user = &checkUser();
 
