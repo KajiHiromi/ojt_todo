@@ -15,25 +15,38 @@ sub paresBody {
     return %body;
 }
 
+print "Content-Type: text/html\n\n";
+print "<html>\n";
+print "<head><title>タグ検索表示</title></head>\n";
+print "<body>\n";
+
 
             #送信されたデータを受け取る
 my $method = $ENV{'REQUEST_METHOD'};
 $method = $method || "GET";
              
-print "method = $method\n";
+#print "method = $method\n";
 
 if ($method eq 'POST') {
     read STDIN, my $alldata, $ENV{'CONTENT_LENGTH'};
-    #warn $alldata;
+    warn $alldata;
     $alldata =~tr/+//;
     $alldata =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack('C', hex($1) )/ge;
 
-
+    print "オールデータは$alldata\n";
     my %vals = &paresBody($alldata);
+    
+    print %vals;
     my $dbtag = \%vals;
+
+     
+    print "データhashタグは$dbtag\n";
+    #print "データ%タグは,dbtag\n";
+
+
  
-    print $dbtag;
-  #  my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
+#  my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
+  
   #  my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
 
 
@@ -69,13 +82,13 @@ if ($method eq 'POST') {
  #my $in{"$key"} = my $value;
 #}
 
-print "Content-Type: text/html\n\n";
-print "<html>\n";
-print "<head><title>タグ検索表示</title></head>\n";
-print "<body>\n";
+#print "Content-Type: text/html\n\n";
+#print "<html>\n";
+#print "<head><title>タグ検索表示</title></head>\n";
+#print "<body>\n";
 
 #受け取ったデータを表示する
-#print $dbtag{"tag"};
+#print my $dbtag->tag;
 #
 print "</body>\n";
 print "</html>\n";
