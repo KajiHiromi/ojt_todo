@@ -25,14 +25,14 @@ print "method = $method\n";
 if ($method eq 'POST') {
     read STDIN, my $alldata, $ENV{'CONTENT_LENGTH'};
     #warn $alldata;
-   # $alldata =~tr/+//;
-   # $alldata =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack('C', hex($1) )/ge;
+    $alldata =~tr/+//;
+    $alldata =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack('C', hex($1) )/ge;
 
 
-   # my %vals = &paresBody($alldata);
-   # my $dbtag = \%vals;
+    my %vals = &paresBody($alldata);
+    my $dbtag = \%vals;
  
-
+    print $dbtag;
   #  my $db = DBI->connect('DBI:mysql:todo',$user,$passwd);
   #  my $tagQuery = $db->prepare("SELECT * FROM tag WHERE tag = ?;");
 
@@ -56,15 +56,18 @@ if ($method eq 'POST') {
     my $alldata = $ENV{'QUERY_STRING'} || "";                                           
 }
 
-foreach my $data (split(/&/, my $alldata)) {
- my ($key, $value) = split(/=/, $data);
 
-  $value =~ s/\+/ /g;
-  $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack('C', hex($1))/eg;
-  $value =~ s/\t//g;
+#foreach my $data (split(/&/, my $alldata)) {
+ #my ($key, $value) = split(/=/, $data);
 
- my $in{"$key"} = my $value;
-}
+  #$value =~ s/\+/ /g;
+  #$value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack('C', hex($1))/eg;
+  #$value =~ s/\t//g;
+
+
+  #print $dbtask
+ #my $in{"$key"} = my $value;
+#}
 
 print "Content-Type: text/html\n\n";
 print "<html>\n";
@@ -72,7 +75,7 @@ print "<head><title>タグ検索表示</title></head>\n";
 print "<body>\n";
 
 #受け取ったデータを表示する
-print "<p>入力されたメッセージは$in{'tag'}です。</p>\n";
+#print $dbtag{"tag"};
 #
 print "</body>\n";
 print "</html>\n";
